@@ -42,9 +42,9 @@ Scenario: Erro ao atualizar a perfil
 
 Scenario: Realizar login com e-mail e senha válidos
     Given eu estou na tela "Login"
-    And possuo uma conta verificada com email "alvaro@email.com" e senha "Pass@123"
+    And possuo uma conta verificada com email "alvaroooo@email.com" e senha "Pass@12345678"
     When eu preencho email com "alvaro@email.com"
-    And preencho senha com "Pass@123"
+    And preencho senha com "Pass@12345678"
     And seleciono "Entrar"
     Then eu devo ser autenticado no sistema
     And devo ser redirecionado para a tela "Página inicial"
@@ -55,3 +55,22 @@ Scenario: Encerrar sessão com sucesso
     When eu seleciono "Sair"
     Then o sistema deve encerrar minha sessão
     And eu devo ser redirecionado para a tela "Login"
+
+Scenario: Erro ao realizar login com senha incorreta
+    Given eu estou na tela "Login"
+    And possuo uma conta verificada com email "alvaro@email.com"
+    When eu preencho email com "alvaro@email.com"
+    And preencho senha com "SenhaErrada123"
+    And seleciono "Entrar"
+    Then eu devo ver uma mensagem de erro "Email ou senha inválidos"
+    And devo continuar na tela "Login"
+
+Scenario: Erro ao redefinir senha com código de verificação inválido
+    Given eu possuo uma conta cadastrada com email "alvaro@email.com"
+    And solicitei recuperação de senha para o email "alvaro@email.com"
+    And o código de verificação válido enviado foi "834921"
+    When eu informo o código "111111"
+    And informo a nova senha "NovaSenha@123"
+    And seleciono "Redefinir senha"
+    Then eu devo ver uma mensagem de erro "Código de verificação inválido"
+    And a senha da conta não deve ser atualizada

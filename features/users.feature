@@ -83,8 +83,9 @@ Scenario: Realizar login com conta Google com sucesso
     Then eu devo ser autenticado no sistema
     And devo ser redirecionado para a tela "Página inicial"
 
-Scenario: Visualizar progresso de um conteúdo no histórico
+Scenario: Visualizar progresso de um conteúdo já aberto no histórico
     Given eu estou logado como "alvaro@email.com"
+    And eu já abri o conteúdo "Stranger Things - S01E01" anteriormente
     And o conteúdo "Stranger Things - S01E01" está registrado no meu histórico com progresso de "35%"
     When eu acesso a tela "Histórico"
     Then eu devo ver o conteúdo "Stranger Things - S01E01" no histórico

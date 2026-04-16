@@ -105,3 +105,7 @@ Scenario: Remoção de usuário
     When eu seleciono "Remover conta"
     And eu confirmo a escolha com "Confirmo que quero remover a conta"
     Then o sistema deve mostrar a mensagem "Conta removida com sucesso"
+    And o conteúdo "Stranger Things - S05E02" está registrado no meu histórico com progresso de "35%"
+    When eu acesso a tela "Histórico"
+    Then eu devo ver o conteúdo "Stranger Things - S05E02" no histórico
+    And eu devo ver o progresso "35%" associado a esse conteúdo

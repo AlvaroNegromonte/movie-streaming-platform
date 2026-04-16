@@ -72,5 +72,5 @@ Scenario: Erro ao redefinir senha com código de verificação inválido
     When eu informo o código "111111"
     And informo a nova senha "NovaSenha@123"
     And seleciono "Redefinir senha"
-    Then eu devo ver uma mensagem de erro "Código de verificação inválido"
+    Then eu devo ver uma mensagem de erro "Invalid Verification code"
     And a senha da conta não deve ser atualizada

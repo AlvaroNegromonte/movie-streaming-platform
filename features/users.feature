@@ -38,11 +38,12 @@ Scenario: Erro ao atualizar a perfil
     And escrevo na descrição: "o maior fã de filmes do adam sandler" 
     And seleciono em "Salvar alterações" 
     Then o sistema deve exibir a mensagem "Erro ao atualizar perfil: Já existe alguém com o Nickname 'admin'" 
+    And o sistema deve exibir a mensagem "Tente novamente com outro nome de usuário"
     And ao acessar minha página pública, todos os usuários devem ver as informações do perfil antes da tentativa de atualização
 
 Scenario: Realizar login com e-mail e senha válidos
     Given eu estou na tela "Login"
-    And possuo uma conta verificada com email "alvaroooo@email.com" e senha "Pass@12345678"
+    And possuo uma conta verificada com email "alvaro@email.com" e senha "Pass@12345678"
     When eu preencho email com "alvaro@email.com"
     And preencho senha com "Pass@12345678"
     And seleciono "Entrar"
@@ -90,3 +91,17 @@ Scenario: Visualizar progresso de um conteúdo já aberto no histórico
     When eu acesso a tela "Histórico"
     Then eu devo ver o conteúdo "Stranger Things - S01E01" no histórico
     And eu devo ver o progresso "35%" associado a esse conteúdo
+
+Scenario: Login com perfil não cadastrado
+    Given eu estou na tela "Página inicial" 
+    And eu preencho username com "llucasEmanuel"
+    And eu preencho senha com "lukinhas#123"
+    And eu seleciono "Logar"
+    Then eu recebo a mensagem "Conta não cadastrada. Impossível fazer login."
+
+Scenario: Remoção de usuário
+    Given eu estou logado como "llucasEmanuel"
+    And eu estou na tela "Meu perfil"
+    When eu seleciono "Remover conta"
+    And eu confirmo a escolha com "Confirmo que quero remover a conta"
+    Then o sistema deve mostrar a mensagem "Conta removida com sucesso"

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express, { Request, Response } from 'express';
 import userRoutes from './routes'; 
 import { router as movieRoutes } from './routes/movie-routes';

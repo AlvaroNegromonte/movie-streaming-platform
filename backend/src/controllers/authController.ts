@@ -50,58 +50,6 @@ export const register = async (req: Request, res: Response) => {
     }
 }; 
 
-export const login = async (req: Request, res: Response) => {
-    try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({
-                authenticated: false,
-                error: "Preencha todos os campos obrigatórios",
-            });
-        }
-
-        const user = await prisma.user.findUnique({
-            where: { email },
-        });
-
-        if (!user || !user.password) {
-            return res.status(401).json({
-                authenticated: false,
-                error: "E-mail ou senha inválidos"
-            });
-        }
-
-        const passwordMatches = await bcrypt.compare(password, user.password);
-
-        if (!passwordMatches) {
-            return res.status(401).json({
-                authenticated: false,
-                error: "E-mail ou senha inválidos"
-            });
-        }
-
-        return res.status(200).json({
-            authenticated: true,
-            message: "Login realizado com sucesso",
-            redirect: "home",
-            session: {
-                active: true,
-            },
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-            },
-        });
-    } catch (error) {
-        return res.status(500).json({
-            authenticated: false,
-            error: "Erro interno no servidor",
-        });
-    }
-};
-
 export const googleLogin = async (req: Request, res: Response) => {
     try {
         const { token } = req.body;

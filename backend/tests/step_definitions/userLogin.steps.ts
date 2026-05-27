@@ -12,9 +12,10 @@ const api = axios.create({
     validateStatus: () => true,
 });
 
-let loginData: Record<string, string> = {};
 let response: any;
 let currentEmail = "";
+
+const googleTestId = "123456789";
 
 const testEmails = [
     "alvaro@teste.com",
@@ -25,20 +26,21 @@ const testEmails = [
 Before(async () => {
     await prisma.user.deleteMany({
         where: {
-            email: {
-                in: testEmails,
-            },
+            OR: [
+                {
+                    email: {
+                        in: testEmails,
+                    },
+                },
+                {
+                    googleId: googleTestId,
+                },
+            ],
         },
     });
 
-    loginData = {};
     response = undefined;
     currentEmail = "";
-});
-
-Given("eu estou na tela de login", function () {
-    loginData = {};
-    response = undefined;
 });
 
 Given(
@@ -46,17 +48,19 @@ Given(
     async function (email: string) {
         currentEmail = email;
 
-        const hashedPassword = await bcrypt.hash("Senha@123", 10);
+        const temporaryPassword = await bcrypt.hash("temporary-password", 10);
 
         await prisma.user.upsert({
             where: { email },
             update: {
-                password: hashedPassword,
+                name: "Usuário de Teste",
+                password: temporaryPassword,
+                googleId: null,
             },
             create: {
                 email,
                 name: "Usuário de Teste",
-                password: hashedPassword,
+                password: temporaryPassword,
             },
         });
     }
@@ -101,12 +105,14 @@ Given(
         await prisma.user.upsert({
             where: { email },
             update: {
-                googleId: "123456789",
+                name: "Usuário Google",
+                password: null,
+                googleId: googleTestId,
             },
             create: {
                 email,
                 name: "Usuário Google",
-                googleId: "123456789",
+                googleId: googleTestId,
             },
         });
     }
@@ -120,60 +126,69 @@ Given(
         await prisma.user.update({
             where: { email },
             data: {
-                googleId: "123456789",
+                googleId: googleTestId,
             },
         });
     }
 );
 
 When(
-    "eu preencho o campo de login {string} com {string}",
-    function (field: string, value: string) {
-        const fieldsMap: Record<string, string> = {
-            "e-mail": "email",
-            email: "email",
-            senha: "password",
-        };
-
-        const fieldName = fieldsMap[field] || field;
-        loginData[fieldName] = value;
+    "uma tentativa de login for realizada com o e-mail {string} e senha {string}",
+    async function (email: string, password: string) {
+        response = await api.post("/login", {
+            email,
+            password,
+        });
     }
 );
 
-When("eu seleciono a opção de login {string}", async function (option: string) {
-    if (option === "Entrar") {
-        response = await api.post("/login", loginData);
+When(
+    "uma tentativa de login for realizada com e-mail vazio e senha vazia",
+    async function () {
+        response = await api.post("/login", {
+            email: "",
+            password: "",
+        });
     }
+);
 
-    if (option === "Entrar com Google") {
-        response = undefined;
+When(
+    "uma tentativa de login via Google for realizada para o e-mail {string}",
+    async function (email: string) {
+        currentEmail = email;
+
+        response = await api.post("/auth/google", {
+            token: "TEST_VALID_TOKEN",
+            mockEmail: email,
+            mockName: "Usuário Google",
+        });
     }
-});
+);
 
-When("concluo a autenticação pela conta Google", async function () {
-    response = await api.post("/auth/google", {
-        token: "TEST_VALID_TOKEN",
-        mockEmail: currentEmail,
-        mockName: "Usuário Google",
-    });
-});
-
-Then("o sistema deve autenticar o usuário", function () {
+Then("o serviço deve autenticar o usuário", function () {
     assert.strictEqual(response.status, 200);
     assert.strictEqual(response.data.authenticated, true);
 });
 
-Then("o sistema não deve autenticar o usuário", function () {
+Then("o serviço não deve autenticar o usuário", function () {
     assert.ok(response.status === 400 || response.status === 401);
     assert.notStrictEqual(response.data.authenticated, true);
 });
 
-Then("o sistema não deve enviar a tentativa de autenticação", function () {
+Then("o serviço não deve processar a autenticação", function () {
     assert.strictEqual(response.status, 400);
     assert.strictEqual(response.data.authenticated, false);
 });
 
-Then("deve exibir a mensagem {string}", function (message: string) {
+Then("o serviço deve manter a sessão do usuário ativa", function () {
+    assert.strictEqual(response.data.session.active, true);
+});
+
+Then("o serviço deve liberar o acesso à plataforma", function () {
+    assert.strictEqual(response.data.redirect, "home");
+});
+
+Then("o serviço deve informar a mensagem {string}", function (message: string) {
     const responseBody = JSON.stringify(response.data);
 
     assert.ok(
@@ -182,16 +197,4 @@ Then("deve exibir a mensagem {string}", function (message: string) {
 Esperado: ${message}
 Recebido: ${responseBody}`
     );
-});
-
-Then("a página principal da plataforma deve ser exibida", function () {
-    assert.strictEqual(response.data.redirect, "home");
-});
-
-Then("a sessão do usuário deve permanecer ativa", function () {
-    assert.strictEqual(response.data.session.active, true);
-});
-
-Then("a tela de login deve continuar sendo exibida", function () {
-    assert.ok(response.status === 400 || response.status === 401);
 });

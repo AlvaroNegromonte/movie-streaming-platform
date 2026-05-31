@@ -10,8 +10,8 @@ const app = express();
 // Middleware para aceitar JSON no body das requisições
 app.use(express.json());
 
-// Registrando as rotas de usuários
-app.use(userRoutes);
+// Registrando as rotas de usuários 
+app.use("/api", userRoutes);
 
 // Registrando as rotas de filmes
 app.use("/", movieRoutes);
@@ -27,7 +27,12 @@ app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Movie Streaming API is running" });
 });
 
-// Iniciando o servidor
-app.listen(3000, () => {
-  console.log("Servidor rodando em http://localhost:3000");
-});
+// Iniciando o servidor APENAS se não estivermos em ambiente de teste
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(3000, () => {
+    console.log("Servidor rodando em http://localhost:3000");
+  });
+}
+
+// Exportando o app para que o Supertest possa acessá-lo nos testes
+export default app;

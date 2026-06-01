@@ -2,6 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import * as authService from '../services/auth-service';
 import { deleteUserAccount } from '../services/auth-service';
 import jwt from 'jsonwebtoken'; 
+import bcrypt from "bcrypt";
+import { OAuth2Client } from "google-auth-library";
+import { PrismaClient } from "../generated/prisma";
+
+const prisma = new PrismaClient();
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || "mock_client_id");
 
 export const checkAuthToken = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;

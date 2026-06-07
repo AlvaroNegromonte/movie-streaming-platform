@@ -1,38 +1,63 @@
-import { useEffect, useState } from 'react';
-import { MovieCard } from './components/MovieCard'; // Importando o novo arquivo
-import './App.css';
-import type { Movie } from   './types';
-import cinema_logo from './assets/cinema_logo.png';
+import { useState } from "react";
+import "./App.css";
+import { HomePage } from "./pages/Home/HomePage";
+import { MinhasPlaylistsPage } from "./pages/MinhasPlaylists/MinhasPlaylistsPage";
+import { HistoryPage } from "./pages/History/HistoryPage"; 
+import { MovieDetailsPage } from "./pages/MovieDetails/MovieDetailsPage";
+import type { Movie } from "./types";
+
+// 2. ADICIONADO "history" NAS OPÇÕES DE TELA
+type CurrentPage = "home" | "playlists" | "history" | "movie-details";
 
 function App() {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<CurrentPage>("home");
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-  useEffect(() => {
-    fetch('http://localhost:3000/movies') // Sua rota do back que retorna o array
-      .then(res => {
-        if (!res.ok) throw new Error('Erro ao buscar filmes');
-        return res.json();
-      })
-      .then(data => setMovies(data))
-      .catch(err => setError(err.message));
-  }, []);
+  const currentUser = {
+    id: "Victoria",
+    name: "Victoria",
+  };
+
+  if (currentPage === "playlists") {
+    return (
+      <MinhasPlaylistsPage
+        userId={currentUser.id}
+        onGoToHome={() => setCurrentPage("home")}
+      />
+    );
+  }
+
+  if (currentPage === "history") {
+    return (
+      <HistoryPage
+        onGoToHome={() => setCurrentPage("home")}
+        onGoToPlaylists={() => setCurrentPage("playlists")}
+        onGoToHistory={() => setCurrentPage("history")}
+      />
+    );
+  }
+  if (currentPage === "movie-details" && selectedMovie) {
+    return (
+      <MovieDetailsPage
+        movie={selectedMovie}
+        userId={currentUser.id}
+        onGoToHome={() => setCurrentPage("home")}
+      />
+    );
+  }
 
   return (
-    <div className="container">
-      <header>
-        <img src={cinema_logo} width='300'></img>
-      </header>
-
-      {error && <p className="error">❌ {error}</p>}
-
-      <div className="movie-grid">
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </div>
-    </div>
+    <HomePage
+      userId={currentUser.id}
+      onGoToPlaylists={() => setCurrentPage("playlists")}
+      onGoToHome={() => setCurrentPage("home")}
+      onGoToHistory={() => setCurrentPage("history")}
+      onSelectMovie={(movie) => {
+        setSelectedMovie(movie);
+        setCurrentPage("movie-details");
+      }}
+    />
   );
 }
 
-export default App; // O export default garante que o Fast Refresh funcione aqui
+export default App;

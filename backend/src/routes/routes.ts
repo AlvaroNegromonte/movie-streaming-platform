@@ -1,11 +1,15 @@
-import { Router } from "express";
-import { register, googleLogin, deleteMe, checkAuthToken } from "../controllers/authController";
-import { userLoginRouter } from "./user_login-routes";
+import { Router } from 'express';
+import { userLoginRouter } from './user_login-routes';
+import { register, googleLogin, deleteMe } from '../controllers/authController';
+import {  checkAuthToken } from '../middlewares/authMiddleware';
 
 const router = Router();
 
-router.post("/register", register);
-router.post("/auth/google", googleLogin);
+// Rotas de Autenticação
+router.post('/register', register);
+router.post('/auth/google', googleLogin);
+
+router.use(userLoginRouter);
 
 router.use(userLoginRouter);
 

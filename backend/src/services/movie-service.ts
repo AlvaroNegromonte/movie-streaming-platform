@@ -24,6 +24,7 @@ export class MovieService {
     return {
       id: movie.id,
       title: movie.title || "No title",
+      img_url: movie.img_url || null,
       synopsis: movie.synopsis || "N/A",
       genres: movie.genres || "N/A",
       duration: movie.duration || "N/A",
@@ -41,7 +42,6 @@ export class MovieService {
   }
 }
 
-// Por enquanto, todas as buscas estão ocorrendo pelo título do filme, mas irá mudar no futuro.
 
 export const createMovieService = async (
   movie: Omit<MovieModel, "id" | "createdAt" | "isDeleted">,
@@ -49,7 +49,7 @@ export const createMovieService = async (
   // Aqui é necessário verificar se há algum campo da requisição que não foi preenchido
   const { title, synopsis, genres, duration, url_movie, url_poster } = movie;
 
-  if (genres.length === 0) {
+  if (!genres || genres.length === 0) {
     throw new BadRequestError("Necessário preencher os gêneros");
   }
 

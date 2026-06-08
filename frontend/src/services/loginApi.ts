@@ -28,8 +28,8 @@ export async function loginUser(
   const data: LoginResponse = await response.json();
 
   if (!response.ok || !data.authenticated || !data.user) {
-    throw new Error(data.error ?? "Não foi possível realizar o login");
-  }
+  throw new Error("E-mail ou senha inválidos");
+}
 
   return {
     id: data.user.id,

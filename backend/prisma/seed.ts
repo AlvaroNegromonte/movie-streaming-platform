@@ -1,4 +1,5 @@
 import { PrismaClient } from '../src/generated/prisma'
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,29 @@ async function main() {
   await prisma.playlist.deleteMany();
 
   console.log('🎬 Criando os usuários de teste...');
+  const salt = await bcrypt.genSalt(10);
+  const hashCarlos = await bcrypt.hash("Senha@123", salt);
+  const hashMaria = await bcrypt.hash("Maria@123", salt);
+
+  const usuarioCarlos = await prisma.user.create({
+    data: {
+      id: "1",
+      name: "Carlos",
+      email: "carlos@email.com",
+      password: hashCarlos,
+      avatarUrl: "foto.png",
+    }
+  });
+
+  const usuarioMaria = await prisma.user.create({
+    data: {
+      id: "2",
+      name: "Maria",
+      email: "maria@email.com",
+      password: hashMaria,
+    }
+  });
+
   const usuarioJulio = await prisma.user.create({
     data: {
       id: "usuario-julio-id",

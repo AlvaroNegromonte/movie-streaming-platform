@@ -17,24 +17,30 @@ export function LoginPage({ onLogin, onGoToSignup }: LoginPageProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  event.preventDefault();
 
-    setErrorMessage(null);
-    setIsLoading(true);
+  setErrorMessage(null);
 
-    try {
-      const user = await loginUser(email, password);
-      onLogin(user);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Erro inesperado ao realizar login",
-      );
-    } finally {
-      setIsLoading(false);
-    }
+  if (!email.trim() || !password.trim()) {
+    setErrorMessage("Preencha todos os campos obrigatórios");
+    return;
   }
+
+  setIsLoading(true);
+
+  try {
+    const user = await loginUser(email, password);
+    onLogin(user);
+  } catch (error) {
+    setErrorMessage(
+      error instanceof Error
+        ? error.message
+        : "E-mail ou senha inválidos",
+    );
+  } finally {
+    setIsLoading(false);
+  }
+}
 
   return (
     <main className="login-page">

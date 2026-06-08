@@ -1,22 +1,78 @@
 import { useState } from "react";
 import "./App.css";
+
+import { WelcomePage } from "./pages/Welcome/WelcomePage";
+import { LoginPage } from "./pages/Login/LoginPage";
 import { HomePage } from "./pages/Home/HomePage";
 import { MinhasPlaylistsPage } from "./pages/MinhasPlaylists/MinhasPlaylistsPage";
-import { HistoryPage } from "./pages/History/HistoryPage"; 
+import { HistoryPage } from "./pages/History/HistoryPage";
 import { MovieDetailsPage } from "./pages/MovieDetails/MovieDetailsPage";
-import type { Movie } from "./types";
 
-// 2. ADICIONADO "history" NAS OPÇÕES DE TELA
-type CurrentPage = "home" | "playlists" | "history" | "movie-details";
+import type { LoggedUser, Movie } from "./types";
+
+type CurrentPage =
+  | "welcome"
+  | "login"
+  | "home"
+  | "playlists"
+  | "history"
+  | "movie-details";
+
+const STORAGE_KEY = "cinema_logged_user";
+
+function getStoredUser(): LoggedUser | null {
+  const storedUser = localStorage.getItem(STORAGE_KEY);
+
+  if (!storedUser) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedUser) as LoggedUser;
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
+}
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<CurrentPage>("home");
+  const [currentUser, setCurrentUser] = useState<LoggedUser | null>(
+    getStoredUser,
+  );
+
+  const [currentPage, setCurrentPage] = useState<CurrentPage>(() =>
+    getStoredUser() ? "home" : "welcome",
+  );
+
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-  const currentUser = {
-    id: "Victoria",
-    name: "Victoria",
-  };
+  function handleLogin(user: LoggedUser) {
+    setCurrentUser(user);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    setCurrentPage("home");
+  }
+
+  function handleGoToSignup() {
+    alert("Tela de cadastro será integrada pela feature de Cadastro de Usuário.");
+  }
+
+  if (!currentUser) {
+    if (currentPage === "login") {
+      return (
+        <LoginPage
+          onLogin={handleLogin}
+          onGoToSignup={handleGoToSignup}
+        />
+      );
+    }
+
+    return (
+      <WelcomePage
+        onGoToLogin={() => setCurrentPage("login")}
+        onGoToSignup={handleGoToSignup}
+      />
+    );
+  }
 
   if (currentPage === "playlists") {
     return (
@@ -37,6 +93,7 @@ function App() {
       />
     );
   }
+
   if (currentPage === "movie-details" && selectedMovie) {
     return (
       <MovieDetailsPage

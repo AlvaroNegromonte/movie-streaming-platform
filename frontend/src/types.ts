@@ -63,3 +63,8 @@ export interface LoggedUser {
   name: string;
   email?: string;
 }
+export interface RecommendationSection {
+  sectionTitle?: string;
+  movies: Movie[];
+  message?: string;
+}

@@ -75,23 +75,33 @@ Before(async function () {
     .setChromeService(service)
     .build();
 
+  await driver.manage().setTimeouts({
+    implicit: 0,
+    pageLoad: 15000,
+    script: 10000,
+  });
+
   expectedLoggedEmail = null;
 
   await driver.get(FRONTEND_URL);
   await clearSession();
-  await driver.navigate().refresh();
 });
 
 After(async function () {
-  if (driver) {
-    await driver.quit();
+  if (!driver) {
+    return;
   }
+
+  await Promise.race([
+    driver.quit(),
+    new Promise((resolve) => setTimeout(resolve, 5000)),
+  ]);
 });
 
 Given("eu estou na tela inicial do CInema", async function () {
   await driver.get(FRONTEND_URL);
   await clearSession();
-  await driver.navigate().refresh();
+  await driver.get(FRONTEND_URL);
 
   await driver.wait(
     until.elementLocated(
@@ -102,10 +112,12 @@ Given("eu estou na tela inicial do CInema", async function () {
 });
 
 Given("eu estou na tela de login", async function () {
-  await driver.get(`${FRONTEND_URL}/login`);
+  await driver.get(FRONTEND_URL);
   await clearSession();
-  await driver.navigate().refresh();
+  await driver.get(`${FRONTEND_URL}/login`);
 
+  await driver.wait(until.elementLocated(By.id("email")), 15000);
+  await driver.wait(until.elementLocated(By.id("password")), 15000);
   await waitForText("Acesse sua conta");
 });
 

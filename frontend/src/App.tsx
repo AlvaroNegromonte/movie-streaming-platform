@@ -12,6 +12,7 @@ import { MovieDetailsPage } from "./pages/MovieDetails/MovieDetailsPage";
 import { Register } from "./pages/Register/register";
 import { AccountPage } from "./pages/Account/AccountPage";
 import { RecomendadosPage } from "./pages/Recomendados/RecomendadosPage";
+import { SearchPage } from "./pages/Search/SearchPage";
 import { AddMovie } from "./pages/AddMovie/AddMovie";
 
 import type { LoggedUser, Movie } from "./types";
@@ -121,6 +122,7 @@ function App() {
             onGoToPlaylists={() => navigate("/playlists")}
             onGoToHome={() => navigate("/")}
             onGoToHistory={() => navigate("/history")}
+            onGoToSearch={() => navigate("/search")}
             onGoToRecommendations={() => navigate("/recommendations")}
             onGoToAddMovie={currentUser?.role === 'administrador' ? () => {
               setMovieToEdit(null);
@@ -138,6 +140,21 @@ function App() {
           />
         }
       />
+      
+      <Route
+        path="/search"
+        element={
+          <SearchPage
+            onGoToHome={() => navigate("/")}
+            onGoToPlaylists={() => navigate("/playlists")}
+            onGoToHistory={() => navigate("/history")}
+            onSelectMovie={(movie) => {
+              setSelectedMovie(movie);
+              navigate(`/movies/${movie.id}`);
+            }}
+          />
+        }
+      />
 
       <Route
         path="/playlists"
@@ -149,7 +166,7 @@ function App() {
           />
         }
       />
-
+      
       <Route
         path="/history"
         element={

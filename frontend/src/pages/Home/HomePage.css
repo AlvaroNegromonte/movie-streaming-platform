@@ -370,8 +370,6 @@
   }
 }
 
-/* ESTILOS PARA O MENU DE PERFIL (DROPDOWN) */
-
 .home-header-right {
   display: flex;
   align-items: center;
@@ -564,4 +562,79 @@
 
 .keep-watching-scrollview::-webkit-scrollbar-thumb:hover {
   background: #fcc147;
+}
+
+/* Alinha o título "Todos os Filmes" com o botão de filtro na mesma linha */
+.catalog-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.catalog-header-flex .section-title-wrapper {
+  margin-bottom: 0;
+  flex: 1; 
+  margin-right: 20px; 
+}
+
+.home-outline-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1C1B1B; 
+  color: #E5E2E1;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.home-outline-button:hover {
+  background-color: #2a2a2a; 
+  transform: scale(1.02);
+}
+
+.genre-filter-container {
+  position: relative;
+}
+
+.genre-dropdown-menu {
+  position: absolute;
+  top: 110%; 
+  right: 0;
+  background-color: #1a1a1a; 
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 200px;
+  z-index: 100; 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.genre-dropdown-item {
+  background: transparent;
+  color: #E5E2E1;
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.genre-dropdown-item:hover {
+  background-color: #333;
+}
+
+.genre-dropdown-item.active {
+  color: #ffc107;
+  font-weight: bold;
 }

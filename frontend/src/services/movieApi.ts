@@ -12,8 +12,22 @@ async function parseResponse<T>(response: Response): Promise<T> {
   return data;
 }
 
-export async function getMovies(): Promise<Movie[]> {
-  const response = await fetch(`${API_URL}/movies`);
+export async function getMovies(search?: string, genre?: string): Promise<Movie[]> {
+  // Começamos com a URL base padrão
+  let url = `${API_URL}/movies`;
+
+  // Se o usuário digitou algo ou clicou em um gênero, montamos a URL com os filtros
+  if (search || genre) {
+    const params = new URLSearchParams();
+    
+    if (search) params.append('search', search);
+    if (genre) params.append('genre', genre);
+    
+    // A URL vira algo como: http://localhost:3000/movies?search=metropolis&genre=Ação
+    url = `${url}?${params.toString()}`;
+  }
+
+  const response = await fetch(url);
 
   return parseResponse<Movie[]>(response);
 }

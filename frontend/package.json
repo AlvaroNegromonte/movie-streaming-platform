@@ -12,6 +12,7 @@
     "test:login": "echo 'Running Login GUI tests' && cucumber-js --config='' ../features/userlogingui.feature --import tsx --require 'tests/step_definitions/userLogin.steps.ts'",
     "test:moviesmanagement": "echo 'Running Movies Management Cypress' && cypress run --spec '../features/moviesmanagement_GUI.feature'",
     "test:signup": "echo 'Running SignUp State tests' && cucumber-js --config='' ../features/userSignUp.feature --import tsx --require 'tests/step_definitions/userSignUp-steps.ts'",
+    "test:search-filter": "echo 'Running Search and Filter GUI tests' && cucumber-js --config='' ../features/search_and_filter_GUI.feature --import tsx --require 'tests/step_definitions/search-and-filter.steps.ts'",
     "preview": "vite preview",
     "test:integ:movie-fetch-frontend": "npx vitest tests/integration/movieService.integration.spec.ts",
     "cypress:open": "cypress open"

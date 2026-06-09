@@ -22,10 +22,11 @@ interface HomePageProps {
   onGoToProfile?: () => void;
   onGoToAddMovie?: () => void;
   onGoToEditMovie?: (movie: Movie) => void;
+  onGoToSearch: () => void;
   isAdmin?: boolean;
 }
 
-export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToHistory, onGoToRecommendations, onSelectMovie, onGoToProfile, onGoToAddMovie, onGoToEditMovie }: HomePageProps) {
+export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToHistory, onGoToSearch, onGoToRecommendations, onSelectMovie, onGoToProfile, onGoToAddMovie, onGoToEditMovie }: HomePageProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loadingMovies, setLoadingMovies] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +49,21 @@ export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToH
   const [movieToDelete, setMovieToDelete] = useState<Movie | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deletedMovieTitle, setDeletedMovieTitle] = useState<string | null>(null);
+  
+  const AVAILABLE_GENRES = [
+    "Ação", 
+    "Aventura", 
+    "Comédia", 
+    "Drama", 
+    "Ficção Científica", 
+    "Terror", 
+    "Romance", 
+    "Animação", 
+    "Documentário", 
+    "Suspense"
+  ];
+  const [selectedGenre, setSelectedGenre] = useState<string>(""); 
+  const [isGenreMenuOpen, setIsGenreMenuOpen] = useState(false);
 
   useEffect(() => {
     async function loadMovies() {
@@ -55,7 +71,7 @@ export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToH
         setLoadingMovies(true);
         setError(null);
 
-        const data = await getMovies();
+        const data = await getMovies(undefined, selectedGenre !== "" ? selectedGenre : undefined);
 
         setMovies(data);
       } catch (err) {
@@ -68,7 +84,7 @@ export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToH
     }
 
     loadMovies();
-  }, []);
+  }, [selectedGenre]);
 
   useEffect(() => {
     let isMounted = true;
@@ -239,6 +255,7 @@ export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToH
         }}
         onGoToHistory={onGoToHistory}
         onGoToProfile={onGoToProfile}
+        onGoToSearch={onGoToSearch}
         onGoToRecommendations={onGoToRecommendations}
         onGoToAddMovie={onGoToAddMovie}
       />
@@ -285,6 +302,48 @@ export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToH
               ))}
             </div>
           )}
+        </section>
+
+                      <section className="catalog-section">
+          <div className="catalog-header-flex">
+            <div className="section-title-wrapper">
+              <h2>{selectedGenre ? `Filmes de ${selectedGenre}` : "Todos os Filmes"}</h2>
+              <div className="section-title-line"></div>
+            </div>
+            
+            <div className="genre-filter-container">
+              <button 
+                className="home-outline-button"
+                onClick={() => setIsGenreMenuOpen(!isGenreMenuOpen)}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E5E2E1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+                {selectedGenre ? selectedGenre : "Selecionar gênero"}
+              </button>
+
+              {isGenreMenuOpen && (
+                <div className="genre-dropdown-menu">
+                  <button 
+                    className="genre-dropdown-item"
+                    onClick={() => { setSelectedGenre(""); setIsGenreMenuOpen(false); }}
+                  >
+                    Todos os Gêneros
+                  </button>
+                  
+                  {AVAILABLE_GENRES.map((genre) => (
+                    <button 
+                      key={genre}
+                      className={`genre-dropdown-item ${selectedGenre === genre ? "active" : ""}`}
+                      onClick={() => { setSelectedGenre(genre); setIsGenreMenuOpen(false); }}
+                    >
+                      {genre}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </section>
 
         {/* SEÇÃO ORIGINAL DO GRID DE FILMES */}

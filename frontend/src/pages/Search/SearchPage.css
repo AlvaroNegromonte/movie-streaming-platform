@@ -1,0 +1,265 @@
+.search-page-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #141414;
+  min-height: 100vh;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+.search-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-hero-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 50px;
+}
+
+.search-title {
+  color: #ffc107;
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 700;
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #1C1B1B; 
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 14px 20px;
+  width: 100%;
+  margin-bottom: 25px;
+  box-sizing: border-box;
+}
+
+.search-input-large {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+  width: 100%;
+  outline: none;
+  margin-left: 15px;
+  font-family: inherit;
+}
+
+.search-button {
+  background-color: #ffc107;
+  color: black;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 40px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.search-button:hover {
+  transform: scale(1.05);
+  background-color: #e0a800;
+}
+
+.search-bottom-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.results-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.results-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; 
+  margin-bottom: 40px;
+}
+
+.results-header-info {
+  text-align: left;
+}
+
+.results-header-info h2 {
+  color: #ffc107;
+  font-size: 24px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-family: inherit;
+}
+
+.results-header-info p {
+  color: #aaa;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.genre-filter-container {
+  position: relative;
+}
+
+.search-outline-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1C1B1B;
+  color: #E5E2E1;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.search-outline-button:hover {
+  background-color: #2a2a2a;
+  transform: scale(1.02);
+}
+
+.genre-dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: #1a1a1a; 
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 200px;
+  z-index: 100;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.genre-dropdown-item {
+  background: transparent;
+  color: #E5E2E1;
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.genre-dropdown-item:hover {
+  background-color: #333;
+}
+
+.genre-dropdown-item.active {
+  color: #ffc107;
+  font-weight: bold;
+}
+
+.search-results-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.no-results-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.no-results-title {
+  color: #ffc107;
+  font-size: 28px;
+  margin-bottom: 12px;
+  font-family: inherit;
+}
+
+.no-results-subtitle {
+  color: #aaa;
+  font-size: 18px;
+  margin-bottom: 40px;
+  font-family: inherit;
+}
+
+.back-to-catalog-button {
+  background-color: #ffc107;
+  color: black;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 40px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.back-to-catalog-button:hover {
+  transform: scale(1.05);
+  background-color: #e0a800;
+}
+
+.clear-filter-error-button {
+  background-color: transparent;
+  color: #ff4444;
+  font-weight: bold;
+  border: 1px solid #ff4444;
+  border-radius: 8px;
+  padding: 14px 40px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.clear-filter-error-button:hover {
+  background-color: #ff4444;
+  color: white;
+}
+
+.search-message {
+  font-size: 18px;
+  color: #aaa;
+  font-family: inherit;
+}
+
+.search-results-grid .movie-card {
+  width: 260px; 
+  flex: 0 0 auto; 
+}
+
+.search-results-grid .movie-card img {
+  width: 100%;
+  height: 360px; 
+  object-fit: cover;
+  object-position: center;
+}

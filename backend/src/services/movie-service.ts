@@ -31,7 +31,7 @@ export class MovieService {
       duration: movie.duration || "N/A",
       director: movie.director || "N/A",
       cast: movie.cast || "N/A",
-      year: movie.year || "N/A"
+      year: (movie as any).year || "N/A"
     };
   }
 

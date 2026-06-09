@@ -10,4 +10,5 @@ export interface MovieModel {
   cast?: string[];
   directors?: string[];
   createdAt?: Date;
+  year?: string | null;
 }

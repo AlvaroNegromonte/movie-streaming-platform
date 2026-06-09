@@ -1,6 +1,7 @@
 import { useState } from "react";
 // ✨ Importamos o Navigate aqui para os redirecionamentos de segurança
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { clearLoggedUser, getLoggedUser, saveLoggedUser} from "./services/loginSessions";
 import "./App.css";
 
 import { WelcomePage } from "./pages/Welcome/WelcomePage";
@@ -15,48 +16,31 @@ import { RecomendadosPage } from "./pages/Recomendados/RecomendadosPage";
 
 import type { LoggedUser, Movie } from "./types";
 
-const STORAGE_KEY = "cinema_logged_user";
-
-function getStoredUser(): LoggedUser | null {
-  const storedUser = localStorage.getItem(STORAGE_KEY);
-
-  if (!storedUser) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(storedUser) as LoggedUser;
-  } catch {
-    localStorage.removeItem(STORAGE_KEY);
-    return null;
-  }
-}
-
 function App() {
   const navigate = useNavigate();
 
-  const [currentUser, setCurrentUser] = useState<LoggedUser | null>(
-    getStoredUser,
+  const [currentUser, setCurrentUser] = useState<LoggedUser | null>(() =>
+    getLoggedUser()
   );
 
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   function handleLogin(user: LoggedUser) {
     setCurrentUser(user);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    saveLoggedUser(user);
     navigate("/");
   }
 
   // ✨ NOVA FUNÇÃO: Faz o login e envia diretamente para as playlists!
   function handleRegisterSuccess(user: LoggedUser) {
     setCurrentUser(user);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+    saveLoggedUser(user);
     navigate("/"); 
   }
 
   function handleLogout() {
     setCurrentUser(null);
-    localStorage.removeItem(STORAGE_KEY);
+    clearLoggedUser();
     setSelectedMovie(null);
     navigate("/");
   }

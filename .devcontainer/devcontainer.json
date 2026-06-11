@@ -11,15 +11,21 @@
         "esbenp.prettier-vscode",
         "firsttris.vscode-jest-runner",
         "ms-azuretools.vscode-docker",
-        "ckotzb.postgresql-client" // Sugestão: extensão para explorar o banco
+        "ckotzb.postgresql-client",
+        "alexkrechik.cucumberautocomplete"
       ],
       "settings": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "cucumberautocomplete.steps": [
+          "backend/tests/step_definitions/*.ts"
+        ],
+        "cucumberautocomplete.syncfeatures": "features/*.feature",
+        "cucumberautocomplete.strictGherkinCompletion": true
       }
     }
   },
 
-  "forwardPorts": [3000, 5432],
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y postgresql-client && cd backend && npm install",
+  "forwardPorts": [3000, 5432, 5173],
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y postgresql-client && cd backend && npm install && cd ../frontend && npm install && cd ..",
   "remoteUser": "node"
 }

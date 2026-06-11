@@ -9,13 +9,69 @@ datasource db {
 }
 
 model Movie {
-  id        String   @id @default(uuid())
-  title     String?  // O '?' significa que pode ser nulo (para testar o teu fallback)
+  id        String    @id @default(uuid())
+  title     String
   file_name String?
+  img_url   String?
   synopsis  String?
-  genres    String?
+  genres    String    // Ex: "Ação", "Terror", "Comédia", "Documentário"
+  isPopular Boolean   @default(false) // Fundamental para usuário novo ou sem histórico
+  isDeleted Boolean?
   duration  String?
   director  String?
   cast      String?
+  year      String?
+  createdAt DateTime  @default(now())
+  history   History[] // Relacionamento: Um filme pode estar no histórico de vários usuários
+}
+
+model Playlist {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  movies    String[] @default([])
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String?                           // Se faz opcional devido ao cadastro de usuário via Google
+  googleId  String?  @unique                 
+  avatarUrl String?                           // Esse campo serve para caso o usuário queria ter uma foto de perfil
+  createdAt DateTime @default(now())          // Serve para registrar o momento que o usuário realizou o cadastro
+  history   History[]                         // Relacionamento: Um usuário tem muitos registros no histórico
+  role      String   @default("usuario")      // cargo do usuário
+  isVerified       Boolean   @default(false)  // Por padrão, o cadastro via email e senha começa como falso
+  verificationCode String?                    // Guarda temporariamente os 6 dígitos
+}
+
+model PreRegistration {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  password         String   // Guardará a senha já encriptada (hashed)
+  role             String   @default("usuario")
+  verificationCode String
+  createdAt        DateTime @default(now()) // Essencial para podermos limpar por tempo depois
+}
+
+model History {
+  id        String   @id @default(uuid())
+  userId    String
+  movieId   String
+  watchedAt DateTime @default(now()) // Fundamental para a regra dos "últimos 7 dias"
+  last_position Int      @default(0)
+  is_completed  Boolean  @default(false)
+  is_hidden     Boolean  @default(false)
+
+  @@unique([userId, movieId, watchedAt])
+
+  // Configurações de chaves estrangeiras (ligações entre as tabelas)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
 }

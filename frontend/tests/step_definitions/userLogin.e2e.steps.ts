@@ -1,11 +1,4 @@
-import {
-  Before,
-  After,
-  Given,
-  Then,
-  When,
-  setDefaultTimeout,
-} from "@cucumber/cucumber";
+import { Before, After, Given, Then, When, setDefaultTimeout,} from "@cucumber/cucumber";
 
 import { Builder, By, until } from "selenium-webdriver";
 import type { WebDriver } from "selenium-webdriver";
